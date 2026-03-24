@@ -170,6 +170,7 @@ export const translations = {
     farmName: "नासिक, महाराष्ट्र",
     farmCrops: "फसल: गेहूं, प्याज",
 
+    navHome: "होम",
     navDashboard: "डैशबोर्ड",
     navAskAI: "AI से पूछें",
     navCalendar: "कैलेंडर",
