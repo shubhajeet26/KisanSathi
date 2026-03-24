@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import AppLayout from "@/components/layout/AppLayout";
+import LandingPage from "@/pages/LandingPage";
+import AboutPage from "@/pages/AboutPage";
 import Dashboard from "@/pages/Dashboard";
 import Chatbot from "@/pages/Chatbot";
 import FarmingCalendar from "@/pages/FarmingCalendar";
@@ -25,8 +27,10 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route element={<AppLayout />}>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/chatbot" element={<Chatbot />} />
               <Route path="/calendar" element={<FarmingCalendar />} />
               <Route path="/disease-detection" element={<DiseaseDetection />} />
