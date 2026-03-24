@@ -20,6 +20,7 @@ export const translations = {
     farmCrops: "Crop: Wheat, Onion",
 
     // Nav
+    navHome: "Home",
     navDashboard: "Dashboard",
     navAskAI: "Ask AI",
     navCalendar: "Calendar",
