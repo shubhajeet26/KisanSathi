@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { languageLabels, type Language } from "@/lib/i18n/translations";
+import { useOnboarding } from "@/hooks/useOnboarding";
+import OnboardingForm from "@/components/OnboardingForm";
 
 const navKeys = [
   { path: "/", key: "navHome" as const, icon: Home },
