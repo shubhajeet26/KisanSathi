@@ -20,6 +20,7 @@ export const translations = {
     farmCrops: "Crop: Wheat, Onion",
 
     // Nav
+    navHome: "Home",
     navDashboard: "Dashboard",
     navAskAI: "Ask AI",
     navCalendar: "Calendar",
@@ -169,6 +170,7 @@ export const translations = {
     farmName: "नासिक, महाराष्ट्र",
     farmCrops: "फसल: गेहूं, प्याज",
 
+    navHome: "होम",
     navDashboard: "डैशबोर्ड",
     navAskAI: "AI से पूछें",
     navCalendar: "कैलेंडर",
@@ -305,6 +307,7 @@ export const translations = {
     farmName: "নাসিক, মহারাষ্ট্র",
     farmCrops: "ফসল: গম, পেঁয়াজ",
 
+    navHome: "হোম",
     navDashboard: "ড্যাশবোর্ড",
     navAskAI: "AI জিজ্ঞাসা",
     navCalendar: "ক্যালেন্ডার",

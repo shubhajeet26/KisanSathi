@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard, MessageSquare, Calendar, Camera, Map, TrendingUp,
+  Home, LayoutDashboard, MessageSquare, Calendar, Camera, Map, TrendingUp,
   Bell, Sprout, Menu, X, Leaf, Globe
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { languageLabels, type Language } from "@/lib/i18n/translations";
 
 const navKeys = [
+  { path: "/", key: "navHome" as const, icon: Home },
   { path: "/dashboard", key: "navDashboard" as const, icon: LayoutDashboard },
   { path: "/chatbot", key: "navAskAI" as const, icon: MessageSquare },
   { path: "/calendar", key: "navCalendar" as const, icon: Calendar },
