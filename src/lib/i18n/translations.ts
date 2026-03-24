@@ -8,7 +8,7 @@ export const languageLabels: Record<Language, string> = {
   bn: "বাংলা",
 };
 
-export type TranslationKeys = typeof translations.en;
+export type TranslationKeys = { [K in keyof typeof translations.en]: string };
 
 export const translations = {
   en: {
