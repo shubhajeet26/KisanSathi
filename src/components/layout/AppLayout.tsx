@@ -69,8 +69,10 @@ export default function AppLayout() {
         </nav>
         <div className="p-4 mx-3 mb-4 rounded-xl bg-sidebar-accent/50 border border-sidebar-border">
           <p className="text-xs text-sidebar-foreground/60">{t.farmLocation}</p>
-          <p className="text-sm font-medium text-sidebar-foreground">{t.farmName}</p>
-          <p className="text-xs text-sidebar-foreground/50 mt-1">{t.farmCrops}</p>
+          <p className="text-sm font-medium text-sidebar-foreground">{profile?.location || t.farmName}</p>
+          <p className="text-xs text-sidebar-foreground/50 mt-1">
+            {profile ? `Crops: ${profile.crops.join(", ")}` : t.farmCrops}
+          </p>
         </div>
       </aside>
 
