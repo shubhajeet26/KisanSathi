@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { languageLabels, type Language } from "@/lib/i18n/translations";
+import { useOnboarding } from "@/hooks/useOnboarding";
+import OnboardingForm from "@/components/OnboardingForm";
 
 const navKeys = [
   { path: "/", key: "navHome" as const, icon: Home },
@@ -26,12 +28,17 @@ export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const { language, setLanguage, t } = useLanguage();
+  const { profile, needsOnboarding, saveProfile, isLoading } = useOnboarding();
+
+  if (isLoading) return null;
 
   const navItems = navKeys.map((n) => ({ ...n, label: t[n.key] }));
   const mobileNavItems = mobileNavKeys.map((n) => ({ ...n, label: t[n.key] }));
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <>
+      {needsOnboarding && <OnboardingForm onComplete={saveProfile} />}
+      <div className="min-h-screen flex bg-background">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 bg-sidebar border-r border-sidebar-border fixed h-full z-30">
         <div className="p-5 flex items-center gap-3">
@@ -64,8 +71,10 @@ export default function AppLayout() {
         </nav>
         <div className="p-4 mx-3 mb-4 rounded-xl bg-sidebar-accent/50 border border-sidebar-border">
           <p className="text-xs text-sidebar-foreground/60">{t.farmLocation}</p>
-          <p className="text-sm font-medium text-sidebar-foreground">{t.farmName}</p>
-          <p className="text-xs text-sidebar-foreground/50 mt-1">{t.farmCrops}</p>
+          <p className="text-sm font-medium text-sidebar-foreground">{profile?.location || t.farmName}</p>
+          <p className="text-xs text-sidebar-foreground/50 mt-1">
+            {profile ? `Crops: ${profile.crops.join(", ")}` : t.farmCrops}
+          </p>
         </div>
       </aside>
 
@@ -200,6 +209,7 @@ export default function AppLayout() {
           })}
         </div>
       </nav>
-    </div>
+      </div>
+    </>
   );
 }

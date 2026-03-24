@@ -162,6 +162,14 @@ export const translations = {
     aboutTeamName: "Team EcoMind",
     aboutTeamDesc: "Building technology for sustainable and intelligent agriculture.",
     aboutBackHome: "Back",
+
+    // Onboarding
+    onboardingTitle: "Welcome, Farmer! 🌾",
+    onboardingSubtitle: "Tell us about your farm so we can personalize your experience.",
+    onboardingLocation: "Your Location",
+    onboardingLocationPlaceholder: "e.g. Nashik, Maharashtra",
+    onboardingCrops: "Select Your Crops",
+    onboardingStart: "Start Farming Smart",
   },
   hi: {
     appName: "कृषिAI",
@@ -299,6 +307,13 @@ export const translations = {
     aboutTeamName: "टीम EcoMind",
     aboutTeamDesc: "टिकाऊ और बुद्धिमान कृषि के लिए प्रौद्योगिकी का निर्माण।",
     aboutBackHome: "वापस",
+
+    onboardingTitle: "स्वागत है, किसान! 🌾",
+    onboardingSubtitle: "अपने खेत के बारे में बताएं ताकि हम आपका अनुभव बेहतर बना सकें।",
+    onboardingLocation: "आपका स्थान",
+    onboardingLocationPlaceholder: "जैसे नासिक, महाराष्ट्र",
+    onboardingCrops: "अपनी फसलें चुनें",
+    onboardingStart: "स्मार्ट खेती शुरू करें",
   },
   bn: {
     appName: "কৃষিAI",
@@ -436,5 +451,12 @@ export const translations = {
     aboutTeamName: "টিম EcoMind",
     aboutTeamDesc: "টেকসই ও বুদ্ধিমান কৃষির জন্য প্রযুক্তি তৈরি।",
     aboutBackHome: "ফিরে যান",
+
+    onboardingTitle: "স্বাগতম, কৃষক! 🌾",
+    onboardingSubtitle: "আপনার খামার সম্পর্কে বলুন যাতে আমরা আপনার অভিজ্ঞতা কাস্টমাইজ করতে পারি।",
+    onboardingLocation: "আপনার অবস্থান",
+    onboardingLocationPlaceholder: "যেমন নাসিক, মহারাষ্ট্র",
+    onboardingCrops: "আপনার ফসল নির্বাচন করুন",
+    onboardingStart: "স্মার্ট কৃষি শুরু করুন",
   },
 } as const;
