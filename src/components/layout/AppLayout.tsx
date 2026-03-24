@@ -28,6 +28,9 @@ export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const { language, setLanguage, t } = useLanguage();
+  const { profile, needsOnboarding, saveProfile, isLoading } = useOnboarding();
+
+  if (isLoading) return null;
 
   const navItems = navKeys.map((n) => ({ ...n, label: t[n.key] }));
   const mobileNavItems = mobileNavKeys.map((n) => ({ ...n, label: t[n.key] }));
