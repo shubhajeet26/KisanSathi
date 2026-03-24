@@ -8,8 +8,8 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 const teamMembers = [
   { name: "Shubhajeet Saha", role: "Team Leader", email: "shubhajeetsaha26@gmail.com", initials: "SS" },
   { name: "Shreyasi Das", role: "Member", email: "", initials: "SD" },
-  { name: "Shubhajeet Saha", role: "Member", email: "", initials: "SS" },
-  { name: "Shubhajeet Saha", role: "Member", email: "", initials: "SS" },
+  { name: "Sayan Gupta", role: "Member", email: "sayan5300k@gmail.com", initials: "SG" },
+  { name: "Prince Kumar Singh", role: "Member", email: "esingprinceh31747@gmail.com", initials: "PS" },
 ];
 
 export default function AboutPage() {
