@@ -451,5 +451,12 @@ export const translations = {
     aboutTeamName: "টিম EcoMind",
     aboutTeamDesc: "টেকসই ও বুদ্ধিমান কৃষির জন্য প্রযুক্তি তৈরি।",
     aboutBackHome: "ফিরে যান",
+
+    onboardingTitle: "স্বাগতম, কৃষক! 🌾",
+    onboardingSubtitle: "আপনার খামার সম্পর্কে বলুন যাতে আমরা আপনার অভিজ্ঞতা কাস্টমাইজ করতে পারি।",
+    onboardingLocation: "আপনার অবস্থান",
+    onboardingLocationPlaceholder: "যেমন নাসিক, মহারাষ্ট্র",
+    onboardingCrops: "আপনার ফসল নির্বাচন করুন",
+    onboardingStart: "স্মার্ট কৃষি শুরু করুন",
   },
 } as const;
