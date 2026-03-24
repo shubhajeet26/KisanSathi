@@ -136,6 +136,31 @@ export const translations = {
     levelSafe: "SAFE",
     levelWarning: "WARNING",
     levelCritical: "CRITICAL",
+
+    // Landing page
+    heroTitle: "Welcome to KisanSathi",
+    heroTagline: "Your Smart Farming Companion",
+    heroDescription: "An AI-powered platform helping farmers make climate-smart decisions.",
+    landingGetStarted: "Get Started",
+    landingExplore: "Explore Features",
+    landingFeatures: "Features",
+    landingFeaturesSubtitle: "Everything you need for smarter, climate-adaptive farming.",
+    landingAbout: "About Us",
+    featWeather: "Weather Alerts",
+    featWeatherDesc: "Real-time weather monitoring with proactive alerts for your farm.",
+    featDisease: "Disease Detection",
+    featDiseaseDesc: "AI-powered crop disease identification from photos.",
+    featCalendar: "Farming Calendar",
+    featCalendarDesc: "Plan sowing, irrigation, and harvesting with smart scheduling.",
+    featProfit: "Profit Estimator",
+    featProfitDesc: "Calculate expected returns based on crop, area, and market prices.",
+    featAI: "AI Assistant",
+    featAIDesc: "Ask farming questions in your language and get instant guidance.",
+
+    // About page
+    aboutTeamName: "Team EcoMind",
+    aboutTeamDesc: "Building technology for sustainable and intelligent agriculture.",
+    aboutBackHome: "Back",
   },
   hi: {
     appName: "कृषिAI",
