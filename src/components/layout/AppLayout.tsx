@@ -36,8 +36,9 @@ export default function AppLayout() {
   const mobileNavItems = mobileNavKeys.map((n) => ({ ...n, label: t[n.key] }));
 
   return (
+    <>
       {needsOnboarding && <OnboardingForm onComplete={saveProfile} />}
-    <div className="min-h-screen flex bg-background">
+      <div className="min-h-screen flex bg-background">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 bg-sidebar border-r border-sidebar-border fixed h-full z-30">
         <div className="p-5 flex items-center gap-3">
