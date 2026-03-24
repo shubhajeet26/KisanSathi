@@ -2,10 +2,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Droplets, FlaskConical, Thermometer, Sprout } from "lucide-react";
 import { soilSuggestions } from "@/lib/mock-data";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function SoilHealth() {
   const [ph, setPh] = useState(6.8);
   const [moisture, setMoisture] = useState(42);
+  const { t } = useLanguage();
 
   const phCategory = useMemo(() => {
     if (ph < 5.5) return "acidic";
@@ -14,55 +16,53 @@ export default function SoilHealth() {
   }, [ph]);
 
   const moistureStatus = useMemo(() => {
-    if (moisture < 25) return { label: "Low", color: "text-critical", bg: "bg-critical" };
-    if (moisture > 60) return { label: "High", color: "text-warning", bg: "bg-warning" };
-    return { label: "Optimal", color: "text-safe", bg: "bg-safe" };
-  }, [moisture]);
+    if (moisture < 25) return { label: t.soilLow, color: "text-critical", bg: "bg-critical" };
+    if (moisture > 60) return { label: t.soilHigh, color: "text-warning", bg: "bg-warning" };
+    return { label: t.soilOptimal, color: "text-safe", bg: "bg-safe" };
+  }, [moisture, t]);
 
   const soil = soilSuggestions[phCategory];
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-display font-bold text-foreground">Soil Health 🌱</h1>
-        <p className="text-sm text-muted-foreground mt-1">Analyze and improve your soil conditions</p>
+        <h1 className="text-2xl font-display font-bold text-foreground">{t.soilTitle}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t.soilSubtitle}</p>
       </div>
 
-      {/* Inputs */}
       <div className="glass-card p-5 space-y-6">
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium text-foreground flex items-center gap-2">
-              <FlaskConical className="w-4 h-4 text-primary" /> Soil pH
+              <FlaskConical className="w-4 h-4 text-primary" /> {t.soilPH}
             </label>
             <span className="text-sm font-display font-bold text-foreground">{ph.toFixed(1)}</span>
           </div>
           <input type="range" min={3} max={10} step={0.1} value={ph} onChange={(e) => setPh(Number(e.target.value))} className="w-full accent-primary" />
           <div className="flex justify-between text-xs text-muted-foreground mt-1">
-            <span>3.0 (Acidic)</span><span>7.0 (Neutral)</span><span>10.0 (Alkaline)</span>
+            <span>3.0 ({t.soilAcidic})</span><span>7.0 ({t.soilNeutral})</span><span>10.0 ({t.soilAlkaline})</span>
           </div>
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium text-foreground flex items-center gap-2">
-              <Droplets className="w-4 h-4 text-sky" /> Soil Moisture
+              <Droplets className="w-4 h-4 text-sky" /> {t.soilMoisture}
             </label>
             <span className="text-sm font-display font-bold text-foreground">{moisture}%</span>
           </div>
           <input type="range" min={0} max={100} value={moisture} onChange={(e) => setMoisture(Number(e.target.value))} className="w-full accent-sky" />
           <div className="flex justify-between text-xs text-muted-foreground mt-1">
-            <span>0% (Dry)</span><span>100% (Saturated)</span>
+            <span>0% ({t.soilDry})</span><span>100% ({t.soilSaturated})</span>
           </div>
         </div>
       </div>
 
-      {/* Visual Indicators */}
       <div className="grid grid-cols-2 gap-3">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`glass-card p-4 border-l-4 ${soil.color === "safe" ? "border-l-safe" : soil.color === "warning" ? "border-l-warning" : "border-l-critical"}`}>
           <div className="flex items-center gap-2 mb-1">
             <FlaskConical className="w-4 h-4 text-primary" />
-            <span className="text-xs text-muted-foreground">pH Status</span>
+            <span className="text-xs text-muted-foreground">{t.soilPHStatus}</span>
           </div>
           <p className={`font-display font-bold text-sm ${soil.color === "safe" ? "text-safe" : soil.color === "warning" ? "text-warning" : "text-critical"}`}>{soil.status}</p>
         </motion.div>
@@ -70,16 +70,15 @@ export default function SoilHealth() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className={`glass-card p-4 border-l-4 ${moistureStatus.color === "text-safe" ? "border-l-safe" : moistureStatus.color === "text-warning" ? "border-l-warning" : "border-l-critical"}`}>
           <div className="flex items-center gap-2 mb-1">
             <Droplets className="w-4 h-4 text-sky" />
-            <span className="text-xs text-muted-foreground">Moisture</span>
+            <span className="text-xs text-muted-foreground">{t.soilMoistureLabel}</span>
           </div>
           <p className={`font-display font-bold text-sm ${moistureStatus.color}`}>{moistureStatus.label} ({moisture}%)</p>
         </motion.div>
       </div>
 
-      {/* Suggestions */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-5">
         <h3 className="font-display font-semibold text-foreground mb-3 flex items-center gap-2">
-          <Sprout className="w-5 h-5 text-primary" /> Recommendations
+          <Sprout className="w-5 h-5 text-primary" /> {t.soilRecommendations}
         </h3>
         <ul className="space-y-2.5">
           {soil.suggestions.map((s, i) => (

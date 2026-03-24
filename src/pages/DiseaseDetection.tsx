@@ -2,12 +2,14 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, Camera, AlertTriangle, CheckCircle2, XCircle, Leaf } from "lucide-react";
 import { diseaseResults } from "@/lib/mock-data";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function DiseaseDetection() {
   const [image, setImage] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const { t } = useLanguage();
 
   const handleFile = (file: File) => {
     const reader = new FileReader();
@@ -38,11 +40,10 @@ export default function DiseaseDetection() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-display font-bold text-foreground">Disease Detection 📸</h1>
-        <p className="text-sm text-muted-foreground mt-1">Upload a photo of your crop to detect diseases</p>
+        <h1 className="text-2xl font-display font-bold text-foreground">{t.diseaseTitle}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t.diseaseSubtitle}</p>
       </div>
 
-      {/* Upload Zone */}
       <div
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -62,15 +63,15 @@ export default function DiseaseDetection() {
         {image ? (
           <div className="space-y-4">
             <img src={image} alt="Uploaded crop" className="max-h-64 mx-auto rounded-xl object-cover" />
-            <p className="text-xs text-muted-foreground">Click to change image</p>
+            <p className="text-xs text-muted-foreground">{t.diseaseChangeImg}</p>
           </div>
         ) : (
           <div className="space-y-3">
             <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
               <Camera className="w-8 h-8 text-primary" />
             </div>
-            <p className="font-medium text-foreground">Drop image here or click to upload</p>
-            <p className="text-xs text-muted-foreground">Supports JPG, PNG up to 10MB</p>
+            <p className="font-medium text-foreground">{t.diseaseDropText}</p>
+            <p className="text-xs text-muted-foreground">{t.diseaseSupport}</p>
           </div>
         )}
       </div>
@@ -85,17 +86,16 @@ export default function DiseaseDetection() {
         >
           {analyzing ? (
             <>
-              <Leaf className="w-5 h-5 animate-spin" /> Analyzing...
+              <Leaf className="w-5 h-5 animate-spin" /> {t.diseaseAnalyzing}
             </>
           ) : (
             <>
-              <Upload className="w-5 h-5" /> Analyze Image
+              <Upload className="w-5 h-5" /> {t.diseaseAnalyze}
             </>
           )}
         </motion.button>
       )}
 
-      {/* Results */}
       <AnimatePresence>
         {result && (
           <motion.div
@@ -111,15 +111,15 @@ export default function DiseaseDetection() {
                   <p className="text-xs text-muted-foreground mt-1">{diseaseResults.description}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="bg-critical/10 text-critical text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      {diseaseResults.risk.toUpperCase()} RISK
+                      {diseaseResults.risk.toUpperCase()} {t.diseaseRisk}
                     </div>
-                    <span className="text-xs text-muted-foreground">{diseaseResults.confidence}% confidence</span>
+                    <span className="text-xs text-muted-foreground">{diseaseResults.confidence}% {t.diseaseConfidence}</span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="glass-card p-5">
-              <h3 className="font-display font-semibold text-foreground mb-3">Recommended Actions</h3>
+              <h3 className="font-display font-semibold text-foreground mb-3">{t.diseaseActions}</h3>
               <ul className="space-y-2.5">
                 {diseaseResults.suggestions.map((s, i) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm text-foreground">

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Mic, Globe, Sparkles, MapPin, Leaf } from "lucide-react";
+import { Send, Mic, Sparkles, MapPin, Leaf } from "lucide-react";
 import { chatExamples } from "@/lib/mock-data";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface Message {
   id: string;
@@ -9,8 +10,6 @@ interface Message {
   sender: "user" | "ai";
   time: string;
 }
-
-const languages = ["English", "हिन्दी", "বাংলা"];
 
 const aiResponses: Record<string, string> = {
   default: "Based on your farm's current conditions in Nashik — soil moisture at 42%, temperature 32°C — I'd recommend focusing on maintaining irrigation schedules. The weather forecast shows rain on Wednesday which will help. Would you like specific advice for your wheat or onion crops?",
@@ -20,14 +19,19 @@ const aiResponses: Record<string, string> = {
 };
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: "1", text: "Namaste! 🙏 I'm KrishiAI, your farming assistant. I can help with crop planning, disease detection, weather advice, and more. How can I help you today?", sender: "ai", time: "Now" },
-  ]);
+  const { t } = useLanguage();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [language, setLanguage] = useState("English");
   const [isRecording, setIsRecording] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Reset greeting when language changes
+  useEffect(() => {
+    setMessages([
+      { id: "1", text: t.chatGreeting, sender: "ai", time: "Now" },
+    ]);
+  }, [t.chatGreeting]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,32 +59,20 @@ export default function Chatbot() {
 
   return (
     <div className="max-w-3xl mx-auto flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-5rem)]">
-      {/* Header */}
       <div className="glass-card p-4 mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <h2 className="font-display font-semibold text-foreground">KrishiAI Assistant</h2>
+            <h2 className="font-display font-semibold text-foreground">{t.chatTitle}</h2>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <MapPin className="w-3 h-3" /> Nashik • <Leaf className="w-3 h-3" /> Wheat, Onion
+              <MapPin className="w-3 h-3" /> {t.farmName} • <Leaf className="w-3 h-3" /> {t.farmCrops}
             </div>
           </div>
         </div>
-        <div className="relative">
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="appearance-none bg-secondary text-secondary-foreground text-xs px-3 py-1.5 rounded-lg pr-7 cursor-pointer border-0 focus:ring-1 focus:ring-primary"
-          >
-            {languages.map((l) => <option key={l}>{l}</option>)}
-          </select>
-          <Globe className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-        </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-3 px-1 pb-2">
         <AnimatePresence>
           {messages.map((msg) => (
@@ -112,7 +104,6 @@ export default function Chatbot() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Example Prompts */}
       {messages.length <= 1 && (
         <div className="flex flex-wrap gap-2 mb-3">
           {chatExamples.map((ex) => (
@@ -127,7 +118,6 @@ export default function Chatbot() {
         </div>
       )}
 
-      {/* Input */}
       <div className="glass-card p-3 flex items-center gap-2">
         <button
           onClick={() => setIsRecording(!isRecording)}
@@ -142,14 +132,14 @@ export default function Chatbot() {
             {[...Array(5)].map((_, i) => (
               <div key={i} className="w-1 bg-critical rounded-full animate-waveform" style={{ animationDelay: `${i * 0.1}s` }} />
             ))}
-            <span className="text-xs text-muted-foreground ml-3">Listening...</span>
+            <span className="text-xs text-muted-foreground ml-3">{t.chatListening}</span>
           </div>
         ) : (
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
-            placeholder="Ask KrishiAI anything..."
+            placeholder={t.chatPlaceholder}
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
           />
         )}
