@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Bell, BellOff, Droplets, Bug, Wheat, FlaskConical, MapPin, Sprout } from "lucide-react";
+import { Bell, Droplets, Bug, Wheat, FlaskConical, MapPin, Sprout } from "lucide-react";
 import { reminders as initialReminders } from "@/lib/mock-data";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 const typeIcons: Record<string, React.ReactNode> = {
   fertilizer: <FlaskConical className="w-5 h-5" />,
@@ -14,6 +15,7 @@ const typeIcons: Record<string, React.ReactNode> = {
 
 export default function Reminders() {
   const [items, setItems] = useState(initialReminders);
+  const { t } = useLanguage();
 
   const toggle = (id: string) => {
     setItems((prev) => prev.map((r) => (r.id === id ? { ...r, enabled: !r.enabled } : r)));
@@ -23,11 +25,11 @@ export default function Reminders() {
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-display font-bold text-foreground">Reminders 🔔</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage your farming task notifications</p>
+          <h1 className="text-2xl font-display font-bold text-foreground">{t.remTitle}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t.remSubtitle}</p>
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Bell className="w-4 h-4" /> {items.filter((r) => r.enabled).length} active
+          <Bell className="w-4 h-4" /> {items.filter((r) => r.enabled).length} {t.remActive}
         </div>
       </div>
 

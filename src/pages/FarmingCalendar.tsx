@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle2, Clock, Circle } from "lucide-react";
 import { calendarTasks } from "@/lib/mock-data";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 const typeColors: Record<string, string> = {
   sowing: "bg-safe/15 text-safe border-safe/20",
@@ -23,13 +24,14 @@ const typeEmoji: Record<string, string> = {
 
 export default function FarmingCalendar() {
   const [view, setView] = useState<"week" | "month">("week");
+  const { t } = useLanguage();
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-display font-bold text-foreground">Farming Calendar</h1>
-          <p className="text-sm text-muted-foreground mt-1">Plan and track your farming activities</p>
+          <h1 className="text-2xl font-display font-bold text-foreground">{t.calTitle}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t.calSubtitle}</p>
         </div>
         <div className="flex bg-secondary rounded-xl p-1">
           {(["week", "month"] as const).map((v) => (
@@ -40,13 +42,12 @@ export default function FarmingCalendar() {
                 view === v ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {v === "week" ? "Weekly" : "Monthly"}
+              {v === "week" ? t.calWeekly : t.calMonthly}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Mini Calendar Header */}
       <div className="glass-card p-4">
         <div className="flex items-center justify-between mb-4">
           <button className="p-1.5 rounded-lg hover:bg-muted"><ChevronLeft className="w-4 h-4 text-muted-foreground" /></button>
@@ -58,7 +59,7 @@ export default function FarmingCalendar() {
             <span key={d} className="text-muted-foreground py-1">{d}</span>
           ))}
           {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
-            const hasTask = calendarTasks.some((t) => parseInt(t.date.split("-")[2]) === day);
+            const hasTask = calendarTasks.some((tt) => parseInt(tt.date.split("-")[2]) === day);
             const isToday = day === 24;
             return (
               <button
@@ -75,9 +76,8 @@ export default function FarmingCalendar() {
         </div>
       </div>
 
-      {/* Tasks */}
       <div className="space-y-3">
-        <h3 className="font-display font-semibold text-foreground">Upcoming Tasks</h3>
+        <h3 className="font-display font-semibold text-foreground">{t.calUpcoming}</h3>
         {calendarTasks.map((task, i) => (
           <motion.div
             key={task.id}
@@ -99,13 +99,12 @@ export default function FarmingCalendar() {
         ))}
       </div>
 
-      {/* Progress */}
       <div className="glass-card p-4">
-        <h3 className="font-display font-semibold text-foreground mb-3">This Week's Progress</h3>
+        <h3 className="font-display font-semibold text-foreground mb-3">{t.calProgress}</h3>
         <div className="w-full bg-muted rounded-full h-3">
           <div className="bg-primary h-3 rounded-full transition-all" style={{ width: "25%" }} />
         </div>
-        <p className="text-xs text-muted-foreground mt-2">2 of 8 tasks completed</p>
+        <p className="text-xs text-muted-foreground mt-2">{t.calTasksDone}</p>
       </div>
     </div>
   );

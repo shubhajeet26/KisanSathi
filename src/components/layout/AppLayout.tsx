@@ -3,25 +3,31 @@ import { Outlet, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, MessageSquare, Calendar, Camera, Map, TrendingUp,
-  Bell, Sprout, Menu, X, Leaf, ChevronLeft
+  Bell, Sprout, Menu, X, Leaf, Globe
 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { languageLabels, type Language } from "@/lib/i18n/translations";
 
-const navItems = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/chatbot", label: "Ask AI", icon: MessageSquare },
-  { path: "/calendar", label: "Calendar", icon: Calendar },
-  { path: "/disease-detection", label: "Disease", icon: Camera },
-  { path: "/map", label: "Map", icon: Map },
-  { path: "/profit", label: "Profit", icon: TrendingUp },
-  { path: "/reminders", label: "Reminders", icon: Bell },
-  { path: "/soil", label: "Soil", icon: Sprout },
+const navKeys = [
+  { path: "/", key: "navDashboard" as const, icon: LayoutDashboard },
+  { path: "/chatbot", key: "navAskAI" as const, icon: MessageSquare },
+  { path: "/calendar", key: "navCalendar" as const, icon: Calendar },
+  { path: "/disease-detection", key: "navDisease" as const, icon: Camera },
+  { path: "/map", key: "navMap" as const, icon: Map },
+  { path: "/profit", key: "navProfit" as const, icon: TrendingUp },
+  { path: "/reminders", key: "navReminders" as const, icon: Bell },
+  { path: "/soil", key: "navSoil" as const, icon: Sprout },
 ];
 
-const mobileNavItems = navItems.slice(0, 5);
+const mobileNavKeys = navKeys.slice(0, 5);
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
+
+  const navItems = navKeys.map((n) => ({ ...n, label: t[n.key] }));
+  const mobileNavItems = mobileNavKeys.map((n) => ({ ...n, label: t[n.key] }));
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -32,8 +38,8 @@ export default function AppLayout() {
             <Leaf className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-lg font-display font-bold text-sidebar-foreground">KrishiAI</h1>
-            <p className="text-xs text-sidebar-foreground/60">Smart Farming</p>
+            <h1 className="text-lg font-display font-bold text-sidebar-foreground">{t.appName}</h1>
+            <p className="text-xs text-sidebar-foreground/60">{t.appTagline}</p>
           </div>
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1">
@@ -56,9 +62,9 @@ export default function AppLayout() {
           })}
         </nav>
         <div className="p-4 mx-3 mb-4 rounded-xl bg-sidebar-accent/50 border border-sidebar-border">
-          <p className="text-xs text-sidebar-foreground/60">Farm Location</p>
-          <p className="text-sm font-medium text-sidebar-foreground">Nashik, Maharashtra</p>
-          <p className="text-xs text-sidebar-foreground/50 mt-1">Crop: Wheat, Onion</p>
+          <p className="text-xs text-sidebar-foreground/60">{t.farmLocation}</p>
+          <p className="text-sm font-medium text-sidebar-foreground">{t.farmName}</p>
+          <p className="text-xs text-sidebar-foreground/50 mt-1">{t.farmCrops}</p>
         </div>
       </aside>
 
@@ -85,7 +91,7 @@ export default function AppLayout() {
                   <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
                     <Leaf className="w-5 h-5 text-primary-foreground" />
                   </div>
-                  <h1 className="text-lg font-display font-bold text-sidebar-foreground">KrishiAI</h1>
+                  <h1 className="text-lg font-display font-bold text-sidebar-foreground">{t.appName}</h1>
                 </div>
                 <button onClick={() => setSidebarOpen(false)} className="text-sidebar-foreground/70">
                   <X className="w-5 h-5" />
@@ -125,14 +131,27 @@ export default function AppLayout() {
           </button>
           <div className="flex items-center gap-2 lg:hidden">
             <Leaf className="w-5 h-5 text-primary" />
-            <span className="font-display font-bold text-foreground">KrishiAI</span>
+            <span className="font-display font-bold text-foreground">{t.appName}</span>
           </div>
           <div className="hidden lg:block">
             <h2 className="text-sm font-medium text-muted-foreground">
-              {navItems.find((n) => n.path === location.pathname)?.label || "Dashboard"}
+              {navItems.find((n) => n.path === location.pathname)?.label || t.navDashboard}
             </h2>
           </div>
           <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <div className="relative">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as Language)}
+                className="appearance-none bg-secondary text-secondary-foreground text-xs px-3 py-1.5 rounded-lg pr-7 cursor-pointer border-0 focus:ring-1 focus:ring-primary"
+              >
+                {(Object.keys(languageLabels) as Language[]).map((lang) => (
+                  <option key={lang} value={lang}>{languageLabels[lang]}</option>
+                ))}
+              </select>
+              <Globe className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+            </div>
             <Link to="/reminders" className="relative p-2 rounded-full hover:bg-muted transition-colors">
               <Bell className="w-5 h-5 text-muted-foreground" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-critical rounded-full" />

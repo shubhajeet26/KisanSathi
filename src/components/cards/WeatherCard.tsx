@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { Cloud, Droplets, Wind, MapPin } from "lucide-react";
 import { weatherData } from "@/lib/mock-data";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function WeatherCard() {
+  const { t } = useLanguage();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -16,12 +19,12 @@ export default function WeatherCard() {
       <div className="relative z-10">
         <div className="flex items-center gap-1.5 text-primary-foreground/80 text-xs mb-3">
           <MapPin className="w-3.5 h-3.5" />
-          {weatherData.location}
+          {t.farmName}
         </div>
         <div className="flex items-end justify-between">
           <div>
             <p className="text-5xl font-display font-bold">{weatherData.temperature}°</p>
-            <p className="text-sm text-primary-foreground/80 mt-1">{weatherData.condition}</p>
+            <p className="text-sm text-primary-foreground/80 mt-1">{t.weatherCondition}</p>
           </div>
           <div className="space-y-1.5 text-xs text-primary-foreground/70">
             <div className="flex items-center gap-1.5">
