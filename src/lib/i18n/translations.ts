@@ -307,6 +307,13 @@ export const translations = {
     aboutTeamName: "टीम EcoMind",
     aboutTeamDesc: "टिकाऊ और बुद्धिमान कृषि के लिए प्रौद्योगिकी का निर्माण।",
     aboutBackHome: "वापस",
+
+    onboardingTitle: "स्वागत है, किसान! 🌾",
+    onboardingSubtitle: "अपने खेत के बारे में बताएं ताकि हम आपका अनुभव बेहतर बना सकें।",
+    onboardingLocation: "आपका स्थान",
+    onboardingLocationPlaceholder: "जैसे नासिक, महाराष्ट्र",
+    onboardingCrops: "अपनी फसलें चुनें",
+    onboardingStart: "स्मार्ट खेती शुरू करें",
   },
   bn: {
     appName: "কৃষিAI",
