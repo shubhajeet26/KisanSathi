@@ -9,6 +9,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { languageLabels, type Language } from "@/lib/i18n/translations";
 
 const navKeys = [
+  { path: "/", key: "navHome" as const, icon: Home },
   { path: "/dashboard", key: "navDashboard" as const, icon: LayoutDashboard },
   { path: "/chatbot", key: "navAskAI" as const, icon: MessageSquare },
   { path: "/calendar", key: "navCalendar" as const, icon: Calendar },

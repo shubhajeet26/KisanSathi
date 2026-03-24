@@ -307,6 +307,7 @@ export const translations = {
     farmName: "নাসিক, মহারাষ্ট্র",
     farmCrops: "ফসল: গম, পেঁয়াজ",
 
+    navHome: "হোম",
     navDashboard: "ড্যাশবোর্ড",
     navAskAI: "AI জিজ্ঞাসা",
     navCalendar: "ক্যালেন্ডার",
