@@ -209,6 +209,7 @@ export default function AppLayout() {
           })}
         </div>
       </nav>
-    </div>
+      </div>
+    </>
   );
 }
