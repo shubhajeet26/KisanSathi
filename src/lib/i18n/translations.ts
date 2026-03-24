@@ -162,6 +162,14 @@ export const translations = {
     aboutTeamName: "Team EcoMind",
     aboutTeamDesc: "Building technology for sustainable and intelligent agriculture.",
     aboutBackHome: "Back",
+
+    // Onboarding
+    onboardingTitle: "Welcome, Farmer! 🌾",
+    onboardingSubtitle: "Tell us about your farm so we can personalize your experience.",
+    onboardingLocation: "Your Location",
+    onboardingLocationPlaceholder: "e.g. Nashik, Maharashtra",
+    onboardingCrops: "Select Your Crops",
+    onboardingStart: "Start Farming Smart",
   },
   hi: {
     appName: "कृषिAI",
