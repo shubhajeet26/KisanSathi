@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Leaf, MapPin, Sprout, ChevronRight } from "lucide-react";
+import { Leaf, MapPin, Sprout, ChevronRight, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +21,26 @@ export default function OnboardingForm({ onComplete }: OnboardingFormProps) {
   const { t } = useLanguage();
   const [location, setLocation] = useState("");
   const [selectedCrops, setSelectedCrops] = useState<string[]>([]);
+  const [locationStatus, setLocationStatus] = useState<"requesting" | "granted" | "denied">("requesting");
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLocationStatus("denied");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation("Auto-detected Location");
+        setLocationStatus("granted");
+      },
+      (error) => {
+        console.warn("Geolocation denied or error:", error);
+        setLocationStatus("denied");
+      },
+      { timeout: 10000 }
+    );
+  }, []);
 
   const toggleCrop = (crop: string) => {
     setSelectedCrops((prev) =>
@@ -34,7 +54,7 @@ export default function OnboardingForm({ onComplete }: OnboardingFormProps) {
     }
   };
 
-  const isValid = location.trim().length > 0 && selectedCrops.length > 0;
+  const isValid = location.trim().length > 0 && selectedCrops.length > 0 && locationStatus !== "requesting";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md p-4">
@@ -58,18 +78,35 @@ export default function OnboardingForm({ onComplete }: OnboardingFormProps) {
           <p className="text-sm text-muted-foreground">{t.onboardingSubtitle}</p>
         </div>
 
-        {/* Location */}
+        {/* Location Section */}
         <div className="space-y-2">
           <Label className="flex items-center gap-1.5 text-sm font-medium">
             <MapPin className="w-4 h-4 text-primary" />
             {t.onboardingLocation}
           </Label>
-          <Input
-            placeholder={t.onboardingLocationPlaceholder}
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="h-11"
-          />
+          
+          {locationStatus === "requesting" && (
+            <div className="flex items-center gap-2 p-3 bg-accent/50 rounded-lg border border-border text-sm text-muted-foreground animate-pulse">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              Detecting your location...
+            </div>
+          )}
+          
+          {locationStatus === "granted" && (
+            <div className="flex items-center gap-2 p-3 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg border border-emerald-500/20 text-sm font-medium">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              Location auto-detected successfully
+            </div>
+          )}
+          
+          {locationStatus === "denied" && (
+            <Input
+              placeholder={t.onboardingLocationPlaceholder}
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="h-11"
+            />
+          )}
         </div>
 
         {/* Crop Selection */}
