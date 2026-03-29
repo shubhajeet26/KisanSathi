@@ -148,13 +148,56 @@
 
 
 
+// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+// import "leaflet/dist/leaflet.css";
+
+// import L from "leaflet";
+// import "leaflet/dist/leaflet.css";
+
+// // Fix broken marker icon
+// delete (L.Icon.Default.prototype as any)._getIconUrl;
+
+// L.Icon.Default.mergeOptions({
+//   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+//   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+//   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+// });
+
+// export default function MapPage() {
+//   const latitude = 22.57; // temporary (Kolkata)
+//   const longitude = 88.36;
+
+//   return (
+//     <div style={{ height: "500px", width: "100%" }}>
+//       <MapContainer
+//         center={[latitude, longitude]}
+//         zoom={13}
+//         style={{ height: "100%", width: "100%" }}
+//       >
+//         <TileLayer
+//           attribution="&copy; OpenStreetMap contributors"
+//           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//         />
+//         <Marker position={[latitude, longitude]}>
+//           <Popup>Your Farm Location</Popup>
+//         </Marker>
+//       </MapContainer>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 
-// Fix broken marker icon
+// Fix marker icon
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -164,13 +207,37 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function MapPage() {
-  const latitude = 22.57; // temporary (Kolkata)
-  const longitude = 88.36;
+  const [position, setPosition] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        console.log("Live Location:", lat, lng);
+
+        setPosition([lat, lng]);
+      },
+      (err) => {
+        console.error("Error getting location:", err);
+        // fallback (Kolkata)
+        setPosition([22.57, 88.36]);
+      },
+      {
+        enableHighAccuracy: true,
+      }
+    );
+  }, []);
+
+  if (!position) {
+    return <p>Loading map...</p>;
+  }
 
   return (
     <div style={{ height: "500px", width: "100%" }}>
       <MapContainer
-        center={[latitude, longitude]}
+        center={position}
         zoom={13}
         style={{ height: "100%", width: "100%" }}
       >
@@ -178,8 +245,8 @@ export default function MapPage() {
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[latitude, longitude]}>
-          <Popup>Your Farm Location</Popup>
+        <Marker position={position}>
+          <Popup>Your Live Location 📍</Popup>
         </Marker>
       </MapContainer>
     </div>
