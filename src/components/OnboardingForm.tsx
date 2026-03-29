@@ -29,18 +29,42 @@ export default function OnboardingForm({ onComplete }: OnboardingFormProps) {
       return;
     }
 
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     setLocation("Auto-detected Location");
+    //     setLocationStatus("granted");
+    //   },
+    //   (error) => {
+    //     console.warn("Geolocation denied or error:", error);
+    //     setLocationStatus("denied");
+    //   },
+    //   { enableHighAccuracy: true,
+    //     timeout: 10000,
+    //     maximumAge: 0 
+    //   }
+    // );
+
+
+
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setLocation("Auto-detected Location");
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        console.log("Your Location:", lat, lng);
+
+        setLocation(`Lat: ${lat}, Lng: ${lng}`);
         setLocationStatus("granted");
       },
       (error) => {
-        console.warn("Geolocation denied or error:", error);
+        console.warn("Geolocation error:", error);
         setLocationStatus("denied");
       },
-      { enableHighAccuracy: true,
+      {
+        enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 0 
+        maximumAge: 0
       }
     );
   }, []);
