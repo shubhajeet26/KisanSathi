@@ -3,58 +3,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Mic, Sparkles, MapPin, Leaf } from "lucide-react";
 import { chatExamples } from "@/lib/mock-data";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-
-interface Message {
-  id: string;
-  text: string;
-  sender: "user" | "ai";
-  time: string;
-}
-
-const aiResponses: Record<string, string> = {
-  default: "Based on your farm's current conditions in Nashik — soil moisture at 42%, temperature 32°C — I'd recommend focusing on maintaining irrigation schedules. The weather forecast shows rain on Wednesday which will help. Would you like specific advice for your wheat or onion crops?",
-  wheat: "For wheat sowing in your region, the ideal window is mid-November to mid-December. Current soil moisture of 42% is perfect. Make sure to use certified HD-2967 or WH-1105 varieties suited for Maharashtra. Seed rate: 40-50 kg/acre with row spacing of 20-22.5 cm.",
-  yellow: "Yellow leaves on tomato plants can indicate several issues: 1) Nitrogen deficiency — apply urea @ 50kg/acre, 2) Overwatering — check drainage, 3) Early blight — apply Mancozeb spray. Given the current humidity of 68%, I'd suspect fungal infection. Can you upload a photo for better diagnosis?",
-  fertilizer: "For rice cultivation in your region, I recommend: Basal dose: DAP 50kg + MOP 30kg/acre. First top dressing (21 days): Urea 25kg/acre. Second top dressing (42 days): Urea 25kg/acre. Also apply Zinc Sulphate 10kg/acre as your soil shows zinc deficiency.",
-};
+import { useChatbot } from "@/hooks/useChatbot";
 
 export default function Chatbot() {
   const { t } = useLanguage();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { messages, isTyping, sendMessage } = useChatbot();
   const [input, setInput] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-
-  // Reset greeting when language changes
-  useEffect(() => {
-    setMessages([
-      { id: "1", text: t.chatGreeting, sender: "ai", time: "Now" },
-    ]);
-  }, [t.chatGreeting]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const getAiResponse = (text: string): string => {
-    const lower = text.toLowerCase();
-    if (lower.includes("wheat") || lower.includes("sow")) return aiResponses.wheat;
-    if (lower.includes("yellow") || lower.includes("leaves")) return aiResponses.yellow;
-    if (lower.includes("fertilizer") || lower.includes("rice")) return aiResponses.fertilizer;
-    return aiResponses.default;
-  };
-
-  const sendMessage = (text: string) => {
-    if (!text.trim()) return;
-    const userMsg: Message = { id: Date.now().toString(), text, sender: "user", time: "Now" };
-    setMessages((prev) => [...prev, userMsg]);
+  const handleSend = () => {
+    sendMessage(input);
     setInput("");
-    setIsTyping(true);
-    setTimeout(() => {
-      setIsTyping(false);
-      setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), text: getAiResponse(text), sender: "ai", time: "Now" }]);
-    }, 1500);
   };
 
   return (
@@ -138,14 +102,18 @@ export default function Chatbot() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !isTyping && input.trim()) {
+                handleSend();
+              }
+            }}
             placeholder={t.chatPlaceholder}
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
           />
         )}
         <button
-          onClick={() => sendMessage(input)}
-          disabled={!input.trim() || isRecording}
+          onClick={handleSend}
+          disabled={!input.trim() || isRecording || isTyping}
           className="p-2.5 rounded-full gradient-primary text-primary-foreground disabled:opacity-40 flex-shrink-0 transition-opacity"
         >
           <Send className="w-5 h-5" />

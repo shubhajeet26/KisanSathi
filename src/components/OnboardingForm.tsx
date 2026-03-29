@@ -38,7 +38,10 @@ export default function OnboardingForm({ onComplete }: OnboardingFormProps) {
         console.warn("Geolocation denied or error:", error);
         setLocationStatus("denied");
       },
-      { timeout: 10000 }
+      { enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0 
+      }
     );
   }, []);
 

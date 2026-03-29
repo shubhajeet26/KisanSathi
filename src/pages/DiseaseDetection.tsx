@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, Camera, AlertTriangle, CheckCircle2, XCircle, Leaf } from "lucide-react";
 import { diseaseResults } from "@/lib/mock-data";
@@ -7,15 +7,24 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 export default function DiseaseDetection() {
   const [image, setImage] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
-  const [result, setResult] = useState(false);
+  // const [result, setResult] = useState(false);
+  const [result, setResult] = useState<any>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [processStep, setProcessStep] = useState(0);
   const { t } = useLanguage();
+
+  const processingSteps = [
+    "Extracting leaf features...",
+    "Matching pathogen database...",
+    "Generating treatment plan...",
+  ];
 
   const handleFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       setImage(e.target?.result as string);
-      setResult(false);
+      // setResult(false);
+      setResult(null);
     };
     reader.readAsDataURL(file);
   };
@@ -27,11 +36,60 @@ export default function DiseaseDetection() {
     if (file && file.type.startsWith("image/")) handleFile(file);
   }, []);
 
+  // const analyze = () => {
+  //   setAnalyzing(true);
+  //   setProcessStep(0);
+  //   setResult(false);
+
+  //   const interval = setInterval(() => {
+  //     setProcessStep((prev) => Math.min(prev + 1, processingSteps.length - 1));
+  //   }, 1000);
+
+  //   setTimeout(() => {
+  //     clearInterval(interval);
+  //     setAnalyzing(false);
+  //     setResult(true);
+  //   }, 3000);
+  // };
+
+
   const analyze = () => {
     setAnalyzing(true);
+    setProcessStep(0);
+    setResult(null);
+
+    setTimeout(() => setProcessStep(1), 700);
+    setTimeout(() => setProcessStep(2), 1400);
+    setTimeout(() => setProcessStep(3), 2000);
+
     setTimeout(() => {
+      const diseases = [
+        {
+          name: "Leaf Blight",
+          confidence: "92%",
+          solution: "Use copper-based fungicide and remove infected leaves."
+        },
+        {
+          name: "Powdery Mildew",
+          confidence: "87%",
+          solution: "Apply sulfur spray and improve air circulation."
+        },
+        {
+          name: "Nitrogen Deficiency",
+          confidence: "89%",
+          solution: "Apply nitrogen-rich fertilizer like urea."
+        },
+        {
+          name: "Leaf Spot",
+          confidence: "90%",
+          solution: "Use neem oil spray and remove affected leaves."
+        }
+      ];
+
+      const result = diseases[Math.floor(Math.random() * diseases.length)];
+
+      setResult(result);
       setAnalyzing(false);
-      setResult(true);
     }, 2500);
   };
 
@@ -62,7 +120,20 @@ export default function DiseaseDetection() {
         />
         {image ? (
           <div className="space-y-4">
-            <img src={image} alt="Uploaded crop" className="max-h-64 mx-auto rounded-xl object-cover" />
+            <div className="relative inline-block mx-auto rounded-xl overflow-hidden shadow-lg border border-border">
+              <img src={image} alt="Uploaded crop" className="max-h-64 object-cover" />
+              {analyzing && (
+                <motion.div
+                  initial={{ top: "-5%" }}
+                  animate={{ top: "105%" }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                  className="absolute left-0 right-0 h-1 bg-primary shadow-[0_0_20px_rgba(var(--primary),1)] z-10"
+                />
+              )}
+              {analyzing && (
+                <div className="absolute inset-0 bg-primary/10 animate-pulse mix-blend-overlay" />
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">{t.diseaseChangeImg}</p>
           </div>
         ) : (
@@ -78,15 +149,17 @@ export default function DiseaseDetection() {
 
       {image && !result && (
         <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={analyze}
           disabled={analyzing}
-          className="w-full py-3 rounded-xl gradient-primary text-primary-foreground font-semibold text-sm disabled:opacity-60 flex items-center justify-center gap-2"
+          className="w-full py-4 rounded-xl gradient-primary text-primary-foreground font-semibold text-sm shadow-xl shadow-primary/20 disabled:opacity-80 flex items-center justify-center gap-2 transition-all"
         >
           {analyzing ? (
             <>
-              <Leaf className="w-5 h-5 animate-spin" /> {t.diseaseAnalyzing}
+              <Leaf className="w-5 h-5 animate-spin" /> {processingSteps[processStep]}
             </>
           ) : (
             <>
@@ -109,11 +182,24 @@ export default function DiseaseDetection() {
                 <div className="flex-1">
                   <h3 className="font-display font-semibold text-foreground">{diseaseResults.name}</h3>
                   <p className="text-xs text-muted-foreground mt-1">{diseaseResults.description}</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="bg-critical/10 text-critical text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      {diseaseResults.risk.toUpperCase()} {t.diseaseRisk}
+                  <div className="flex items-center gap-3 mt-4">
+                    <div className="flex items-center gap-2">
+                       <span className="text-xs font-semibold text-foreground uppercase tracking-wide">{diseaseResults.risk} {t.diseaseRisk}</span>
                     </div>
-                    <span className="text-xs text-muted-foreground">{diseaseResults.confidence}% {t.diseaseConfidence}</span>
+                    <div className="flex-1 flex items-center gap-2">
+                       <span className="text-xs text-muted-foreground whitespace-nowrap">{diseaseResults.confidence}% {t.diseaseConfidence}</span>
+                       <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
+                         <motion.div 
+                           initial={{ width: 0 }}
+                           animate={{ width: `${diseaseResults.confidence}%` }}
+                           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+                           className={`h-full ${
+                             diseaseResults.risk === 'critical' ? 'bg-critical' : 
+                             diseaseResults.risk === 'warning' ? 'bg-warning' : 'bg-safe'
+                           }`}
+                         />
+                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
