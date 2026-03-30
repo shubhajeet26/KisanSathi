@@ -191,7 +191,7 @@
 
 
 
-
+import { useWeather } from "@/hooks/useWeather";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -208,6 +208,8 @@ L.Icon.Default.mergeOptions({
 
 export default function MapPage() {
   const [position, setPosition] = useState<[number, number] | null>(null);
+
+  const weather = useWeather(position?.[0], position?.[1]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -236,6 +238,19 @@ export default function MapPage() {
 
   return (
     <div style={{ height: "500px", width: "100%" }}>
+
+      {/* ✅ WEATHER UI HERE */}
+      {weather && (
+        <div style={{ padding: "10px", background: "#f5f5f5", marginBottom: "10px" }}>
+          <h3>🌦 Weather Info</h3>
+          <p>Temperature: {weather.main.temp}°C</p>
+          <p>Humidity: {weather.main.humidity}%</p>
+          <p>Condition: {weather.weather[0].description}</p>
+          <p>Wind Speed: {weather.wind.speed} m/s</p>
+        </div>
+      )}
+
+
       <MapContainer
         center={position}
         zoom={13}
