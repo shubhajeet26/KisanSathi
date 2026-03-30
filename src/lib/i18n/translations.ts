@@ -13,7 +13,7 @@ export type TranslationKeys = { [K in keyof typeof translations.en]: string };
 export const translations = {
   en: {
     // Common
-    appName: "KrishiAI",
+    appName: "KisanSathi",
     appTagline: "Smart Farming",
     farmLocation: "Farm Location",
     farmName: "Nashik, Maharashtra",
